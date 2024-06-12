@@ -10,12 +10,14 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f5f5f5;
+            background-image: url('https://gitfront.io/r/ZAXEL/H6XqXbue9joA/reg.templ/raw/photo_2024-06-12_22-56-07.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
             font-family: Arial, sans-serif;
         }
         .container {
             text-align: center;
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0.9);
             padding: 20px;
             border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -39,9 +41,6 @@
         .color-name {
             margin-top: 10px;
         }
-        .password {
-            font-weight: bold;
-        }
         #password {
             background-color: #333;
             color: #fff;
@@ -51,11 +50,21 @@
             width: 70%;
             text-align: center;
         }
+        #login {
+            background-color: #fff;
+            color: #000;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            width: 70%;
+            text-align: center;
+            margin-bottom: 20px;
+        }
         .button-container {
             margin-top: 20px;
         }
         .button {
-            background-color: #4CAF50;
+            background-color: #4682B4;
             color: white;
             padding: 10px 20px;
             border: none;
@@ -63,13 +72,52 @@
             cursor: pointer;
         }
         .button:hover {
-            background-color: #45a049;
+            background-color: #3A72A1;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .close-button {
+            background-color: #4682B4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .close-button:hover {
+            background-color: #3A72A1;
+        }
+        .show-password-container {
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Регистрация</h1>
+        <input type="text" id="login" placeholder="Введите логин">
         <div class="squares">
             <div class="square" id="square1" data-index="0"></div>
             <div class="square" id="square2" data-index="1"></div>
@@ -81,18 +129,34 @@
         <div class="color-name" id="colorName">Цвет: #000000</div>
         <div>
             <label for="password">Ваш пароль: </label>
-            <input type="text" id="password" readonly>
+            <input type="password" id="password" readonly>
+        </div>
+        <div class="show-password-container">
+            <input type="checkbox" id="showPassword"> <label for="showPassword">Показать пароль</label>
         </div>
         <div class="button-container">
             <button class="button" id="submitButton">Далее</button>
         </div>
     </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <p id="modalText"></p>
+            <button class="close-button" id="closeButton">Хорошо!</button>
+        </div>
+    </div>
+
     <script>
         const squares = document.querySelectorAll('.square');
         const colorPicker = document.getElementById('colorPicker');
         const colorName = document.getElementById('colorName');
         const passwordInput = document.getElementById('password');
+        const loginInput = document.getElementById('login');
         const submitButton = document.getElementById('submitButton');
+        const showPassword = document.getElementById('showPassword');
+        const modal = document.getElementById('modal');
+        const modalText = document.getElementById('modalText');
+        const closeButton = document.getElementById('closeButton');
         let selectedSquareIndex = null;
         let colors = ['', '', ''];
 
@@ -110,7 +174,7 @@
                 colors[selectedSquareIndex] = color;
                 document.getElementById(`square${parseInt(selectedSquareIndex) + 1}`).style.backgroundColor = color;
                 colorName.textContent = `Цвет: ${color}`;
-                passwordInput.value = colors.map(hexToRgb).join(' ');
+                passwordInput.value = colors.map(hexToRgb).join('');
             }
         });
 
@@ -119,11 +183,33 @@
             const r = (bigint >> 16) & 255;
             const g = (bigint >> 8) & 255;
             const b = bigint & 255;
-            return `rgb(${r},${g},${b})`;
+            return `${r}${g}${b}`;
         }
 
         submitButton.addEventListener('click', () => {
-            alert('Регистрация успешна!');
+            const login = loginInput.value;
+            if (login) {
+                modalText.textContent = `${login}, ваш аккаунт успешно зарегистрирован`;
+                modal.style.display = 'flex';
+            } else {
+                alert('Пожалуйста, введите логин.');
+            }
+        });
+
+        closeButton.addEventListener('click', () => {
+            modal.style.display = 'none';
+            loginInput.value = '';
+            passwordInput.value = '';
+            colors = ['', '', ''];
+            squares.forEach(square => square.style.backgroundColor = '#ccc');
+        });
+
+        showPassword.addEventListener('change', () => {
+            if (showPassword.checked) {
+                passwordInput.type = 'text';
+            } else {
+                passwordInput.type = 'password';
+            }
         });
     </script>
 </body>
