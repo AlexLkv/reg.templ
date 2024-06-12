@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация с выбором цвета</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .squares {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .square {
+            width: 100px;
+            height: 100px;
+            background-color: #ccc;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .slider-container {
+            margin-bottom: 20px;
+        }
+        .color-name {
+            margin-top: 10px;
+        }
+        .password {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Регистрация</h1>
+        <div class="squares">
+            <div class="square" id="square1" data-index="0"></div>
+            <div class="square" id="square2" data-index="1"></div>
+            <div class="square" id="square3" data-index="2"></div>
+        </div>
+        <div class="slider-container">
+            <input type="color" id="colorPicker">
+        </div>
+        <div class="color-name" id="colorName">Цвет: #000000</div>
+        <div>
+            <label for="password">Ваш пароль: </label>
+            <input type="text" id="password" readonly>
+        </div>
+    </div>
+    <script>
+        const squares = document.querySelectorAll('.square');
+        const colorPicker = document.getElementById('colorPicker');
+        const colorName = document.getElementById('colorName');
+        const passwordInput = document.getElementById('password');
+        let selectedSquareIndex = null;
+        let colors = ['', '', ''];
+
+        squares.forEach(square => {
+            square.addEventListener('click', () => {
+                selectedSquareIndex = square.getAttribute('data-index');
+                colorPicker.value = colors[selectedSquareIndex] || '#000000';
+                colorName.textContent = `Цвет: ${colorPicker.value}`;
+            });
+        });
+
+        colorPicker.addEventListener('input', () => {
+            if (selectedSquareIndex !== null) {
+                const color = colorPicker.value;
+                colors[selectedSquareIndex] = color;
+                document.getElementById(`square${parseInt(selectedSquareIndex) + 1}`).style.backgroundColor = color;
+                colorName.textContent = `Цвет: ${color}`;
+                passwordInput.value = colors.join('');
+            }
+        });
+    </script>
+</body>
+</html>
