@@ -31,6 +31,7 @@
             background-color: #ccc;
             border-radius: 10px;
             cursor: pointer;
+            margin: 0 10px;
         }
         .slider-container {
             margin-bottom: 20px;
@@ -40,6 +41,29 @@
         }
         .password {
             font-weight: bold;
+        }
+        #password {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            width: 70%;
+            text-align: center;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
@@ -59,12 +83,16 @@
             <label for="password">Ваш пароль: </label>
             <input type="text" id="password" readonly>
         </div>
+        <div class="button-container">
+            <button class="button" id="submitButton">Далее</button>
+        </div>
     </div>
     <script>
         const squares = document.querySelectorAll('.square');
         const colorPicker = document.getElementById('colorPicker');
         const colorName = document.getElementById('colorName');
         const passwordInput = document.getElementById('password');
+        const submitButton = document.getElementById('submitButton');
         let selectedSquareIndex = null;
         let colors = ['', '', ''];
 
@@ -82,8 +110,20 @@
                 colors[selectedSquareIndex] = color;
                 document.getElementById(`square${parseInt(selectedSquareIndex) + 1}`).style.backgroundColor = color;
                 colorName.textContent = `Цвет: ${color}`;
-                passwordInput.value = colors.join('');
+                passwordInput.value = colors.map(hexToRgb).join(' ');
             }
+        });
+
+        function hexToRgb(hex) {
+            const bigint = parseInt(hex.slice(1), 16);
+            const r = (bigint >> 16) & 255;
+            const g = (bigint >> 8) & 255;
+            const b = bigint & 255;
+            return `rgb(${r},${g},${b})`;
+        }
+
+        submitButton.addEventListener('click', () => {
+            alert('Регистрация успешна!');
         });
     </script>
 </body>
